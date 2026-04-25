@@ -1,0 +1,75 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A1B2C3D4-0001-0001-0001-000000000001}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A1B2C3D4-0002-0002-0002-000000000002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet.Geometry", "src\SpaceOS.Cabinet.Geometry\SpaceOS.Cabinet.Geometry.csproj", "{343ED348-A494-4D0D-B2B0-447727F84C0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet.Abstractions", "src\SpaceOS.Cabinet.Abstractions\SpaceOS.Cabinet.Abstractions.csproj", "{6BE5BB12-C390-4EF6-A629-CFA47C4A80D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet.Domain", "src\SpaceOS.Cabinet.Domain\SpaceOS.Cabinet.Domain.csproj", "{AF7AFD6B-63C7-48E9-BEFC-0C4C0564C51D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet.Machining", "src\SpaceOS.Cabinet.Machining\SpaceOS.Cabinet.Machining.csproj", "{E55D5880-1EE5-4167-8E94-A7339F3722F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet.Construction", "src\SpaceOS.Cabinet.Construction\SpaceOS.Cabinet.Construction.csproj", "{C3360051-E377-4AE1-B8AD-4C0D98CF0EE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet.Semantics", "src\SpaceOS.Cabinet.Semantics\SpaceOS.Cabinet.Semantics.csproj", "{A735218A-C611-46BD-9C62-8ABABD651522}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet", "src\SpaceOS.Cabinet\SpaceOS.Cabinet.csproj", "{178DA2CF-F074-4348-B4AD-31646C7EBD22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceOS.Cabinet.Tests", "tests\SpaceOS.Cabinet.Tests\SpaceOS.Cabinet.Tests.csproj", "{91A05410-A09B-457F-9E3E-A87AC6CAD700}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{343ED348-A494-4D0D-B2B0-447727F84C0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{343ED348-A494-4D0D-B2B0-447727F84C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{343ED348-A494-4D0D-B2B0-447727F84C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{343ED348-A494-4D0D-B2B0-447727F84C0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BE5BB12-C390-4EF6-A629-CFA47C4A80D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BE5BB12-C390-4EF6-A629-CFA47C4A80D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BE5BB12-C390-4EF6-A629-CFA47C4A80D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BE5BB12-C390-4EF6-A629-CFA47C4A80D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF7AFD6B-63C7-48E9-BEFC-0C4C0564C51D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7AFD6B-63C7-48E9-BEFC-0C4C0564C51D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7AFD6B-63C7-48E9-BEFC-0C4C0564C51D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7AFD6B-63C7-48E9-BEFC-0C4C0564C51D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E55D5880-1EE5-4167-8E94-A7339F3722F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E55D5880-1EE5-4167-8E94-A7339F3722F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E55D5880-1EE5-4167-8E94-A7339F3722F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E55D5880-1EE5-4167-8E94-A7339F3722F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3360051-E377-4AE1-B8AD-4C0D98CF0EE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3360051-E377-4AE1-B8AD-4C0D98CF0EE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3360051-E377-4AE1-B8AD-4C0D98CF0EE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3360051-E377-4AE1-B8AD-4C0D98CF0EE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A735218A-C611-46BD-9C62-8ABABD651522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A735218A-C611-46BD-9C62-8ABABD651522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A735218A-C611-46BD-9C62-8ABABD651522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A735218A-C611-46BD-9C62-8ABABD651522}.Release|Any CPU.Build.0 = Release|Any CPU
+		{178DA2CF-F074-4348-B4AD-31646C7EBD22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{178DA2CF-F074-4348-B4AD-31646C7EBD22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{178DA2CF-F074-4348-B4AD-31646C7EBD22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{178DA2CF-F074-4348-B4AD-31646C7EBD22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91A05410-A09B-457F-9E3E-A87AC6CAD700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91A05410-A09B-457F-9E3E-A87AC6CAD700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91A05410-A09B-457F-9E3E-A87AC6CAD700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91A05410-A09B-457F-9E3E-A87AC6CAD700}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{343ED348-A494-4D0D-B2B0-447727F84C0F} = {A1B2C3D4-0001-0001-0001-000000000001}
+		{6BE5BB12-C390-4EF6-A629-CFA47C4A80D4} = {A1B2C3D4-0001-0001-0001-000000000001}
+		{AF7AFD6B-63C7-48E9-BEFC-0C4C0564C51D} = {A1B2C3D4-0001-0001-0001-000000000001}
+		{E55D5880-1EE5-4167-8E94-A7339F3722F8} = {A1B2C3D4-0001-0001-0001-000000000001}
+		{C3360051-E377-4AE1-B8AD-4C0D98CF0EE6} = {A1B2C3D4-0001-0001-0001-000000000001}
+		{A735218A-C611-46BD-9C62-8ABABD651522} = {A1B2C3D4-0001-0001-0001-000000000001}
+		{178DA2CF-F074-4348-B4AD-31646C7EBD22} = {A1B2C3D4-0001-0001-0001-000000000001}
+		{91A05410-A09B-457F-9E3E-A87AC6CAD700} = {A1B2C3D4-0002-0002-0002-000000000002}
+	EndGlobalSection
+EndGlobal

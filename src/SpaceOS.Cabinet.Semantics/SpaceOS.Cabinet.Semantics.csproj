@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>SpaceOS.Cabinet.Semantics</PackageId>
+    <Description>SpaceOS Cabinet semantics: SemanticInferenceService, role/label inference with caching.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpaceOS.Cabinet.Abstractions\SpaceOS.Cabinet.Abstractions.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Domain\SpaceOS.Cabinet.Domain.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Geometry\SpaceOS.Cabinet.Geometry.csproj" />
+  </ItemGroup>
+
+</Project>

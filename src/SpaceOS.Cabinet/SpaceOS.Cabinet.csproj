@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>SpaceOS.Cabinet</PackageId>
+    <Description>SpaceOS Cabinet meta-package: includes Geometry, Abstractions, Domain, Machining, Construction, Semantics.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpaceOS.Cabinet.Geometry\SpaceOS.Cabinet.Geometry.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Abstractions\SpaceOS.Cabinet.Abstractions.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Domain\SpaceOS.Cabinet.Domain.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Machining\SpaceOS.Cabinet.Machining.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Construction\SpaceOS.Cabinet.Construction.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Semantics\SpaceOS.Cabinet.Semantics.csproj" />
+  </ItemGroup>
+
+</Project>

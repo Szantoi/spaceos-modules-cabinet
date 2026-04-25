@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>SpaceOS.Cabinet.Construction</PackageId>
+    <Description>SpaceOS Cabinet construction rules: ConstructionRuleEngine and 10 default rules.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Result" Version="9.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SpaceOS.Cabinet.Domain\SpaceOS.Cabinet.Domain.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Machining\SpaceOS.Cabinet.Machining.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Semantics\SpaceOS.Cabinet.Semantics.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Abstractions\SpaceOS.Cabinet.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

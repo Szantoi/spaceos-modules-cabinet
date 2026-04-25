@@ -1,0 +1,45 @@
+## .NET
+bin/
+obj/
+publish/
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+## NuGet
+*.nupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio
+.vs/
+*.rsuser
+*.cache
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.psess
+*.vsp
+*.vspx
+*.sap
+*.e2e
+
+## Rider
+.idea/
+
+## OS
+.DS_Store
+Thumbs.db
