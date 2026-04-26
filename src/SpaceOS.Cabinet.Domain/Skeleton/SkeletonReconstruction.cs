@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using SpaceOS.Cabinet.Abstractions;
 using SpaceOS.Cabinet.Geometry;
 
 namespace SpaceOS.Cabinet.Domain.Skeleton;
@@ -100,6 +101,14 @@ public static class SkeletonReconstruction
             c.Id, c.SkeletonId, c.ParentPartId, c.ChildPartId, c.JointType,
             new ConnectionGeometry(c.ParentFace, c.ChildEdge, c.EdgeOffset))).ToList();
 
+        // Restore pinned catalog entries (v0.2+)
+        var pinnedCatalogEntries = new Dictionary<(Guid PartId, CatalogType Type), Guid>();
+        foreach (var pinned in snapshot.PinnedCatalogEntries)
+        {
+            var catalogType = (CatalogType)pinned.CatalogType;
+            pinnedCatalogEntries[(pinned.PartId, catalogType)] = pinned.CatalogEntryId;
+        }
+
         var skeleton = Skeleton.Reconstruct(
             snapshot.Id,
             snapshot.TenantId,
@@ -108,7 +117,8 @@ public static class SkeletonReconstruction
             dimension,
             baseCuboidResult.Value,
             additionalParts,
-            connections);
+            connections,
+            pinnedCatalogEntries);
 
         return Result<Skeleton>.Success(skeleton);
     }

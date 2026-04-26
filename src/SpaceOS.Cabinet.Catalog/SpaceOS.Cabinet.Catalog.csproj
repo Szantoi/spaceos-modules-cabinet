@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>SpaceOS.Cabinet.Catalog</PackageId>
+    <Description>SpaceOS Cabinet catalog: CatalogEntry aggregate, 5-state FSM, payload validation, 6-level resolution.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Result" Version="9.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.15" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.15" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpaceOS.Cabinet.Abstractions\SpaceOS.Cabinet.Abstractions.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Domain\SpaceOS.Cabinet.Domain.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "0.2",
+  "description": "Cabinet 0.2 reference snapshot — used for regression testing",
+  "generatedAt": "2026-04-26",
+  "packages": [
+    "SpaceOS.Cabinet.Geometry",
+    "SpaceOS.Cabinet.Abstractions",
+    "SpaceOS.Cabinet.Domain",
+    "SpaceOS.Cabinet.Machining",
+    "SpaceOS.Cabinet.Construction",
+    "SpaceOS.Cabinet.Semantics",
+    "SpaceOS.Cabinet.Catalog",
+    "SpaceOS.Cabinet.Assembly",
+    "SpaceOS.Cabinet.Application",
+    "SpaceOS.Cabinet"
+  ],
+  "testCount": 518,
+  "targetFrameworks": ["net8.0", "net10.0"]
+}

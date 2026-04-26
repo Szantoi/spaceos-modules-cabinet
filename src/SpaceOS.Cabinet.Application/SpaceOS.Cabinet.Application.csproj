@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>SpaceOS.Cabinet.Application</PackageId>
+    <Description>SpaceOS Cabinet application layer: CQRS handlers, DI extensions, staff audit logging.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Ardalis.Result" Version="9.1.0" />
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpaceOS.Cabinet.Domain\SpaceOS.Cabinet.Domain.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Catalog\SpaceOS.Cabinet.Catalog.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Assembly\SpaceOS.Cabinet.Assembly.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Abstractions\SpaceOS.Cabinet.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 using Ardalis.Result;
 using SpaceOS.Cabinet.Abstractions;
 
+// CatalogType is in SpaceOS.Cabinet.Abstractions
+
 namespace SpaceOS.Cabinet.Domain.Skeleton;
 
 /// <summary>
@@ -41,6 +43,12 @@ public sealed class SkeletonSnapshot
 
     /// <summary>Serialised connections.</summary>
     public List<ConnectionSnapshot> Connections { get; init; } = new();
+
+    /// <summary>Role assignments for parts that have been explicitly assigned a role (v0.2+).</summary>
+    public List<RoleAssignmentSnapshot> RoleAssignments { get; init; } = new();
+
+    /// <summary>Pinned catalog entries keyed by part + catalog type (v0.2+).</summary>
+    public List<PinnedCatalogEntrySnapshot> PinnedCatalogEntries { get; init; } = new();
 
     // ── Schema version validation ────────────────────────────────────────────
 
@@ -99,12 +107,12 @@ public sealed class SkeletonSnapshot
 
     // ── Projection ───────────────────────────────────────────────────────────
 
-    /// <summary>Creates a snapshot from a live <see cref="Skeleton"/> aggregate.</summary>
+    /// <summary>Creates a v0.2 snapshot from a live <see cref="Skeleton"/> aggregate.</summary>
     public static SkeletonSnapshot FromSkeleton(Skeleton skeleton)
     {
         return new SkeletonSnapshot
         {
-            SchemaVersion = "0.1",
+            SchemaVersion = "0.2",
             Id = skeleton.Id,
             TenantId = skeleton.TenantId,
             Version = skeleton.Version,
@@ -130,7 +138,19 @@ public sealed class SkeletonSnapshot
                 ParentFace = c.Geometry.ParentFace,
                 ChildEdge = c.Geometry.ChildEdge,
                 EdgeOffset = c.Geometry.EdgeOffset
-            }).ToList()
+            }).ToList(),
+            RoleAssignments = skeleton.Parts
+                .Where(p => p.AssignedRole.HasValue)
+                .Select(p => new RoleAssignmentSnapshot { PartId = p.Id, Role = (int)p.AssignedRole!.Value })
+                .ToList(),
+            PinnedCatalogEntries = skeleton.PinnedCatalogEntries
+                .Select(kvp => new PinnedCatalogEntrySnapshot
+                {
+                    PartId = kvp.Key.PartId,
+                    CatalogType = (int)kvp.Key.Type,
+                    CatalogEntryId = kvp.Value
+                })
+                .ToList()
         };
     }
 }
@@ -180,4 +200,27 @@ public sealed class ConnectionSnapshot
 
     /// <summary>Edge offset in mm.</summary>
     public double EdgeOffset { get; init; }
+}
+
+/// <summary>Serialised role assignment for a part (v0.2+).</summary>
+public sealed class RoleAssignmentSnapshot
+{
+    /// <summary>Part identifier.</summary>
+    public Guid PartId { get; init; }
+
+    /// <summary><see cref="PartRole"/> encoded as an integer.</summary>
+    public int Role { get; init; }
+}
+
+/// <summary>Serialised pinned catalog entry for a part + type slot (v0.2+).</summary>
+public sealed class PinnedCatalogEntrySnapshot
+{
+    /// <summary>Part identifier.</summary>
+    public Guid PartId { get; init; }
+
+    /// <summary><see cref="CatalogType"/> encoded as an integer.</summary>
+    public int CatalogType { get; init; }
+
+    /// <summary>Pinned catalog entry identifier.</summary>
+    public Guid CatalogEntryId { get; init; }
 }

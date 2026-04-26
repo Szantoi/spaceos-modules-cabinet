@@ -14,6 +14,9 @@
     <ProjectReference Include="..\SpaceOS.Cabinet.Machining\SpaceOS.Cabinet.Machining.csproj" />
     <ProjectReference Include="..\SpaceOS.Cabinet.Construction\SpaceOS.Cabinet.Construction.csproj" />
     <ProjectReference Include="..\SpaceOS.Cabinet.Semantics\SpaceOS.Cabinet.Semantics.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Catalog\SpaceOS.Cabinet.Catalog.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Assembly\SpaceOS.Cabinet.Assembly.csproj" />
+    <ProjectReference Include="..\SpaceOS.Cabinet.Application\SpaceOS.Cabinet.Application.csproj" />
   </ItemGroup>
 
 </Project>

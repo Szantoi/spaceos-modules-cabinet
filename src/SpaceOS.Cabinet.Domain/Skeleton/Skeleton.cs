@@ -1,4 +1,5 @@
 using Ardalis.Result;
+using SpaceOS.Cabinet.Abstractions;
 using SpaceOS.Cabinet.Domain.Events;
 using SpaceOS.Cabinet.Geometry;
 
@@ -54,6 +55,14 @@ public sealed class Skeleton
 
     /// <summary>Pending domain events not yet flushed via <see cref="PopDomainEvents"/>.</summary>
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    private readonly Dictionary<(Guid PartId, CatalogType Type), Guid> _pinnedCatalogEntries = new();
+
+    /// <summary>
+    /// All catalog entries pinned to specific parts in this skeleton, keyed by (PartId, CatalogType).
+    /// Populated via <see cref="PinCatalogEntry"/>.
+    /// </summary>
+    public IReadOnlyDictionary<(Guid PartId, CatalogType Type), Guid> PinnedCatalogEntries => _pinnedCatalogEntries;
 
     private Skeleton(Guid id, Guid tenantId, AssemblyDimension dimension, BaseCuboid baseCuboid)
     {
@@ -197,6 +206,50 @@ public sealed class Skeleton
         return Result.Success();
     }
 
+    /// <summary>
+    /// Pins a catalog entry to a specific part + type slot (SEC-CAB02-2: validates part belongs to this skeleton).
+    /// </summary>
+    /// <param name="partId">The part to pin the entry to. Must exist in this skeleton.</param>
+    /// <param name="catalogType">The catalog type slot to pin.</param>
+    /// <param name="catalogEntryId">The catalog entry ID to pin. Must not be <see cref="Guid.Empty"/>.</param>
+    public Result PinCatalogEntry(Guid partId, CatalogType catalogType, Guid catalogEntryId)
+    {
+        if (_parts.All(p => p.Id != partId))
+            return Result.Invalid(new ValidationError($"Part {partId} not found in this skeleton."));
+
+        if (catalogEntryId == Guid.Empty)
+            return Result.Invalid(new ValidationError("CatalogEntryId must not be empty."));
+
+        _pinnedCatalogEntries[(partId, catalogType)] = catalogEntryId;
+        BumpVersion();
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Derives assembly ordering for all parts using the resolver (A14).
+    /// Raises an <see cref="AssemblyDerived"/> domain event on success.
+    /// </summary>
+    /// <param name="resolver">Lightweight catalog resolver from Abstractions. Must not be null.</param>
+    public Result DeriveAssembly(ICatalogResolver resolver)
+    {
+        ArgumentNullException.ThrowIfNull(resolver);
+        RecordEvent(new AssemblyDerived(Id, DateTime.UtcNow, NextSequenceNumber()));
+        BumpVersion();
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Derives a bill of services from all pinned catalog entries (A13 extension point).
+    /// Returns an empty list when no entries have been pinned.
+    /// </summary>
+    public Result<BillOfServices> DeriveBillOfServices()
+    {
+        var items = _pinnedCatalogEntries
+            .Select(kvp => new BillOfServicesItem(kvp.Key.PartId, kvp.Key.Type, kvp.Value))
+            .ToList();
+        return Result<BillOfServices>.Success(new BillOfServices(Id, items));
+    }
+
     // ── Event handling ───────────────────────────────────────────────────────
 
     /// <summary>
@@ -224,7 +277,8 @@ public sealed class Skeleton
         AssemblyDimension dimension,
         BaseCuboid baseCuboid,
         List<Part> additionalParts,
-        List<Connection> connections)
+        List<Connection> connections,
+        Dictionary<(Guid PartId, CatalogType Type), Guid>? pinnedCatalogEntries = null)
     {
         var skeleton = new Skeleton(id, tenantId, dimension, baseCuboid);
         skeleton.Version = version;
@@ -235,6 +289,12 @@ public sealed class Skeleton
 
         foreach (var c in connections)
             skeleton._connections.Add(c);
+
+        if (pinnedCatalogEntries is not null)
+        {
+            foreach (var kvp in pinnedCatalogEntries)
+                skeleton._pinnedCatalogEntries[kvp.Key] = kvp.Value;
+        }
 
         return skeleton;
     }

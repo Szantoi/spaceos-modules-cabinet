@@ -44,3 +44,9 @@ public sealed record SkeletonResized(
     AssemblyDimension NewDim,
     DateTime OccurredAt,
     long SequenceNumber) : IDomainEvent;
+
+/// <summary>Raised when an assembly ordering is derived from catalog pins (A14).</summary>
+public sealed record AssemblyDerived(
+    Guid SkeletonId,
+    DateTime OccurredAt,
+    long SequenceNumber) : IDomainEvent;

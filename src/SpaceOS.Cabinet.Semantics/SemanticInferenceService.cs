@@ -2,6 +2,8 @@ using SpaceOS.Cabinet.Abstractions;
 using SpaceOS.Cabinet.Domain.Skeleton;
 using SpaceOS.Cabinet.Geometry;
 
+// ICatalogResolver is in SpaceOS.Cabinet.Abstractions
+
 namespace SpaceOS.Cabinet.Semantics;
 
 /// <summary>
@@ -52,6 +54,26 @@ public sealed class SemanticInferenceService
     /// <param name="skeleton">The skeleton whose parts are to be classified.</param>
     /// <returns>A read-only dictionary mapping each part ID to its inferred role.</returns>
     public IReadOnlyDictionary<Guid, PartRole> InferAll(Skeleton skeleton)
+    {
+        ArgumentNullException.ThrowIfNull(skeleton);
+
+        var result = new Dictionary<Guid, PartRole>(skeleton.Parts.Count);
+        foreach (var part in skeleton.Parts)
+            result[part.Id] = InferRole(part, skeleton);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Infers roles for all parts using an optional catalog resolver for A12 catalog defaults.
+    /// The resolver is an extension point: pinned catalog entries at Curated level can
+    /// override the computed role in a future Cabinet 0.3+ enhancement.
+    /// For Cabinet 0.2, this overload delegates to the geometry-based inference.
+    /// </summary>
+    /// <param name="skeleton">The skeleton whose parts are to be classified. Must not be null.</param>
+    /// <param name="catalogResolver">Optional catalog resolver. Accepted for API compatibility; not yet used for role override.</param>
+    /// <returns>A read-only dictionary mapping each part ID to its inferred role.</returns>
+    public IReadOnlyDictionary<Guid, PartRole> InferAll(Skeleton skeleton, ICatalogResolver? catalogResolver)
     {
         ArgumentNullException.ThrowIfNull(skeleton);
 

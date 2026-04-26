@@ -37,12 +37,13 @@ public class SkeletonSnapshotTests
     }
 
     [Fact]
-    public void SchemaVersion_Is0Dot1()
+    public void SchemaVersion_Is0Dot2()
     {
         var skeleton = CreateValidSkeleton();
         var snapshot = SkeletonSnapshot.FromSkeleton(skeleton);
 
-        Assert.Equal("0.1", snapshot.SchemaVersion);
+        // Cabinet 0.2: snapshot schema version is now "0.2"
+        Assert.Equal("0.2", snapshot.SchemaVersion);
     }
 
     // ── Round-trip ────────────────────────────────────────────────────────────
@@ -133,7 +134,7 @@ public class SkeletonSnapshotTests
     {
         var skeleton = CreateValidSkeleton();
         var json = SkeletonSnapshot.FromSkeleton(skeleton).ToJson()
-            .Replace("\"0.1\"", "\"bad-version\"");
+            .Replace("\"0.2\"", "\"bad-version\"");
 
         var result = SkeletonSnapshot.FromJson(json);
 
@@ -144,14 +145,14 @@ public class SkeletonSnapshotTests
     [Fact]
     public void FromJson_FutureMinorVersion_ReturnsSuccess()
     {
-        // Minor version bump (0.2) should still be readable by the 0.1 reader
+        // Minor version bump (0.9) should still be readable by the 0.x reader
         var skeleton = CreateValidSkeleton();
         var json = SkeletonSnapshot.FromSkeleton(skeleton).ToJson()
-            .Replace("\"0.1\"", "\"0.2\"");
+            .Replace("\"0.2\"", "\"0.9\"");
 
         var result = SkeletonSnapshot.FromJson(json);
 
-        // 0.2 is still major version 0 — compatible
+        // 0.9 is still major version 0 — compatible
         Assert.True(result.IsSuccess);
     }
 
@@ -161,7 +162,7 @@ public class SkeletonSnapshotTests
         // Major version 1.0 is incompatible
         var skeleton = CreateValidSkeleton();
         var json = SkeletonSnapshot.FromSkeleton(skeleton).ToJson()
-            .Replace("\"0.1\"", "\"1.0\"");
+            .Replace("\"0.2\"", "\"1.0\"");
 
         var result = SkeletonSnapshot.FromJson(json);
 
