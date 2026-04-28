@@ -77,6 +77,30 @@ public sealed class CatalogEntry
     /// <summary>UTC timestamp when the entry was deprecated; null until then.</summary>
     public DateTimeOffset? DeprecatedAt { get; private set; }
 
+    // ── Cabinet 0.3 federation fields ───────────────────────────────────────────
+
+    /// <summary>Server-computed similarity fingerprint (SEC-02). Never client-supplied.</summary>
+    public string? SimilarityFingerprint { get; private set; }
+
+    /// <summary>FK to owning <see cref="CatalogEntryCluster"/> (null if not clusterable).</summary>
+    public Guid? ClusterId { get; private set; }
+
+    /// <summary>SEC-03: time-bounded admin acknowledgment for flag threshold bypass.</summary>
+    public DateTimeOffset? AdminAcknowledgedUntil { get; private set; }
+
+    /// <summary>
+    /// True when ≥3 active flags exist and the entry is not within an active admin acknowledgment window.
+    /// Computed in-memory; generated column in DB.
+    /// </summary>
+    public bool IsAutoHidden => ActiveFlagCount >= 3
+        && (AdminAcknowledgedUntil is null || AdminAcknowledgedUntil < DateTimeOffset.UtcNow);
+
+    /// <summary>Denormalized rating rollup (aggregate-method primary, DB trigger defense-in-depth).</summary>
+    public RatingAggregate Ratings { get; private set; } = RatingAggregate.Empty;
+
+    /// <summary>Count of active (non-resolved) flags against this entry.</summary>
+    public int ActiveFlagCount { get; private set; }
+
     private readonly List<ICatalogDomainEvent> _domainEvents = new();
 
     /// <summary>Uncommitted domain events raised since the last <see cref="PopDomainEvents"/> call.</summary>
@@ -262,6 +286,73 @@ public sealed class CatalogEntry
         UpdatedAt = now;
         Version++;
         _domainEvents.Add(new CatalogEntryDeprecated(Id, actorUserId, UpdatedAt));
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// SEC-02: server-side assignment only — assigns the server-computed similarity fingerprint
+    /// and the owning cluster reference. Never call this from a client-supplied DTO.
+    /// </summary>
+    /// <param name="fingerprint">Normalized fingerprint (null if not clusterable).</param>
+    /// <param name="clusterId">FK to the owning cluster (null if not clusterable).</param>
+    public Result AssignFingerprintAndCluster(string? fingerprint, Guid? clusterId)
+    {
+        SimilarityFingerprint = fingerprint;
+        ClusterId = clusterId;
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Ingests a <see cref="CatalogEntryRating"/> into the rolling rating aggregate (BE-06, aggregate-method primary).
+    /// Pass <paramref name="oldStars"/> when the caller is re-rating (replaces a previous vote).
+    /// </summary>
+    /// <param name="rating">The rating to ingest. Must belong to this entry.</param>
+    /// <param name="oldStars">Previous star value when re-rating; <c>null</c> for a first-time rating.</param>
+    public Result IngestRating(CatalogEntryRating rating, int? oldStars = null)
+    {
+        if (rating.CatalogEntryId != Id)
+            return Result.Invalid(new ValidationError("Rating does not belong to this entry."));
+
+        if (oldStars.HasValue && Ratings.Count > 0)
+        {
+            var newAvg = ((Ratings.AverageStars * Ratings.Count) - oldStars.Value + rating.Stars)
+                         / Ratings.Count;
+            Ratings = Ratings with { AverageStars = Math.Round(newAvg, 2), LastRatedAt = DateTimeOffset.UtcNow };
+        }
+        else
+        {
+            var newCount = Ratings.Count + 1;
+            var newAvg = ((Ratings.AverageStars * Ratings.Count) + rating.Stars) / newCount;
+            Ratings = new RatingAggregate(newCount, Math.Round(newAvg, 2), DateTimeOffset.UtcNow);
+        }
+
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// Ingests a <see cref="CatalogEntryFlag"/> and increments the active flag count (BE-06, aggregate-method primary).
+    /// </summary>
+    /// <param name="flag">The flag to ingest. Must belong to this entry.</param>
+    public Result IngestFlag(CatalogEntryFlag flag)
+    {
+        if (flag.CatalogEntryId != Id)
+            return Result.Invalid(new ValidationError("Flag does not belong to this entry."));
+        ActiveFlagCount++;
+        return Result.Success();
+    }
+
+    /// <summary>
+    /// SEC-03: time-bounded admin flag acknowledgment. Suppresses <see cref="IsAutoHidden"/> until
+    /// <paramref name="ackDuration"/> elapses (default 90 days, maximum 365 days).
+    /// </summary>
+    /// <param name="adminUserId">Admin user performing the acknowledgment.</param>
+    /// <param name="ackDuration">Acknowledgment window; defaults to 90 days if <c>null</c>.</param>
+    public Result ClearFlagsByAdmin(Guid adminUserId, TimeSpan? ackDuration = null)
+    {
+        var window = ackDuration ?? TimeSpan.FromDays(90);
+        if (window > TimeSpan.FromDays(365))
+            return Result.Invalid(new ValidationError("Acknowledgment window cannot exceed 365 days."));
+        AdminAcknowledgedUntil = DateTimeOffset.UtcNow.Add(window);
         return Result.Success();
     }
 

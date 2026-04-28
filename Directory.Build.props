@@ -3,7 +3,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>0.1.0-alpha.1</Version>
+    <Version>0.3.0</Version>
     <Authors>SpaceOS</Authors>
     <Company>JoineryTech</Company>
     <AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>

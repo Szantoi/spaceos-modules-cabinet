@@ -50,6 +50,9 @@ public sealed class SkeletonSnapshot
     /// <summary>Pinned catalog entries keyed by part + catalog type (v0.2+).</summary>
     public List<PinnedCatalogEntrySnapshot> PinnedCatalogEntries { get; init; } = new();
 
+    /// <summary>ID of the TenantStandard applied when this snapshot was created (v0.3+). Null if none applied.</summary>
+    public Guid? AppliedTenantStandard { get; init; }
+
     // ── Schema version validation ────────────────────────────────────────────
 
     private static readonly Regex SchemaVersionRegex =
@@ -96,7 +99,7 @@ public sealed class SkeletonSnapshot
             return Result<SkeletonSnapshot>.Invalid(
                 new ValidationError($"Invalid schema version format: '{snapshot.SchemaVersion}'. Expected 'major.minor'."));
 
-        // Version compatibility: only "0.x" is supported by Cabinet 0.1.x reader
+        // Version compatibility: only "0.x" is supported by Cabinet 0.x reader (accepts "0.1", "0.2", "0.3")
         var parts = snapshot.SchemaVersion.Split('.');
         if (int.TryParse(parts[0], out int major) && major >= 1)
             return Result<SkeletonSnapshot>.Error(
@@ -107,12 +110,13 @@ public sealed class SkeletonSnapshot
 
     // ── Projection ───────────────────────────────────────────────────────────
 
-    /// <summary>Creates a v0.2 snapshot from a live <see cref="Skeleton"/> aggregate.</summary>
+    /// <summary>Creates a v0.3 snapshot from a live <see cref="Skeleton"/> aggregate.</summary>
     public static SkeletonSnapshot FromSkeleton(Skeleton skeleton)
     {
         return new SkeletonSnapshot
         {
-            SchemaVersion = "0.2",
+            SchemaVersion = "0.3",
+            AppliedTenantStandard = null,
             Id = skeleton.Id,
             TenantId = skeleton.TenantId,
             Version = skeleton.Version,

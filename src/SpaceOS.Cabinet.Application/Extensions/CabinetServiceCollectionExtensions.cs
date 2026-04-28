@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SpaceOS.Cabinet.Abstractions;
 using SpaceOS.Cabinet.Assembly;
 using SpaceOS.Cabinet.Catalog;
+using SpaceOS.Cabinet.Catalog.Infrastructure;
 
 /// <summary>
 /// Extension methods for registering SpaceOS Cabinet services with <see cref="IServiceCollection"/>.
@@ -41,6 +42,21 @@ public static class CabinetServiceCollectionExtensions
     {
         services.AddSingleton<IMarkdownSanitizer, MarkdownSanitizer>();
         services.AddSingleton<AssemblyDocumentationService>();
+        return services;
+    }
+
+    /// <summary>
+    /// Registers federation-related services:
+    /// <list type="bullet">
+    ///   <item><see cref="DefaultCatalogFingerprintExtractor"/> as singleton <see cref="ICatalogFingerprintExtractor"/>.</item>
+    /// </list>
+    /// Consumer must register <see cref="ITenantStandardWriteRepository"/> and <see cref="ITenantStandardRepository"/>.
+    /// </summary>
+    /// <param name="services">The service collection to configure.</param>
+    /// <returns>The same <see cref="IServiceCollection"/> for chaining.</returns>
+    public static IServiceCollection AddCabinetFederation(this IServiceCollection services)
+    {
+        services.AddSingleton<ICatalogFingerprintExtractor, DefaultCatalogFingerprintExtractor>();
         return services;
     }
 }

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "0.3",
+  "description": "Cabinet 0.3 reference snapshot — TenantStandard + Federation + Channel<T> RuleEngine",
+  "generatedAt": "2026-04-28",
+  "packages": [
+    "SpaceOS.Cabinet.Geometry@0.2.1",
+    "SpaceOS.Cabinet.Abstractions@0.3.0",
+    "SpaceOS.Cabinet.Domain@0.3.0",
+    "SpaceOS.Cabinet.Machining@0.2.1",
+    "SpaceOS.Cabinet.Construction@0.3.0",
+    "SpaceOS.Cabinet.Semantics@0.2.1",
+    "SpaceOS.Cabinet.Catalog@0.3.0",
+    "SpaceOS.Cabinet.Assembly@0.2.1",
+    "SpaceOS.Cabinet.Application@0.3.0",
+    "SpaceOS.Cabinet@0.3.0"
+  ],
+  "testCount": 719,
+  "targetFrameworks": ["net8.0", "net10.0"],
+  "highlights": [
+    "TenantStandard aggregate with 7 domain events",
+    "CatalogEntry Federation: fingerprint, cluster, rating, flag",
+    "SnapshotMigrator 0.2→0.3 (AppliedTenantStandard=null default)",
+    "ConstructionRuleEngine.ApplyAllAsync Channel<T> parallel (BE-01)",
+    "AddCabinetFederation() DI extension"
+  ]
+}

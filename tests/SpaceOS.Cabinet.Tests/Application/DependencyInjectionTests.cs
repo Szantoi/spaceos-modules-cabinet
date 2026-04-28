@@ -4,6 +4,7 @@ using SpaceOS.Cabinet.Application;
 using SpaceOS.Cabinet.Application.Extensions;
 using SpaceOS.Cabinet.Assembly;
 using SpaceOS.Cabinet.Catalog;
+using SpaceOS.Cabinet.Catalog.Infrastructure;
 using Xunit;
 
 namespace SpaceOS.Cabinet.Tests.Application;
@@ -238,5 +239,44 @@ public class DependencyInjectionTests
         var sanitizer = sp.GetRequiredService<IMarkdownSanitizer>();
 
         Assert.IsType<MarkdownSanitizer>(sanitizer);
+    }
+
+    // ── AddCabinetFederation ───────────────────────────────────────────────────
+
+    [Fact]
+    public void AddCabinetFederation_RegistersICatalogFingerprintExtractor()
+    {
+        var services = new ServiceCollection();
+        services.AddCabinetFederation();
+        var sp = services.BuildServiceProvider();
+
+        var extractor = sp.GetService<ICatalogFingerprintExtractor>();
+
+        Assert.NotNull(extractor);
+    }
+
+    [Fact]
+    public void AddCabinetFederation_ICatalogFingerprintExtractor_IsSingleton()
+    {
+        var services = new ServiceCollection();
+        services.AddCabinetFederation();
+        var sp = services.BuildServiceProvider();
+
+        var a = sp.GetRequiredService<ICatalogFingerprintExtractor>();
+        var b = sp.GetRequiredService<ICatalogFingerprintExtractor>();
+
+        Assert.Same(a, b);
+    }
+
+    [Fact]
+    public void AddCabinetFederation_UsesDefaultCatalogFingerprintExtractor()
+    {
+        var services = new ServiceCollection();
+        services.AddCabinetFederation();
+        var sp = services.BuildServiceProvider();
+
+        var extractor = sp.GetRequiredService<ICatalogFingerprintExtractor>();
+
+        Assert.IsType<DefaultCatalogFingerprintExtractor>(extractor);
     }
 }

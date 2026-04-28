@@ -1,3 +1,4 @@
+#pragma warning disable CS0618 // ApplyAll is obsolete — tests preserved for backward-compat verification
 using SpaceOS.Cabinet.Abstractions;
 using SpaceOS.Cabinet.Construction;
 using SpaceOS.Cabinet.Construction.DefaultRules;

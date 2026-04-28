@@ -249,7 +249,7 @@ public class SkeletonCatalogPinTests
         var snapshotResult = SkeletonSnapshot.FromJson(json);
 
         Assert.True(snapshotResult.IsSuccess);
-        Assert.Equal("0.2", snapshotResult.Value.SchemaVersion);
+        Assert.Equal("0.3", snapshotResult.Value.SchemaVersion);
     }
 
     [Fact]
