@@ -12,11 +12,11 @@ public sealed class CatalogEntryFlag
 {
     private static readonly Regex EmailRegex =
         new(@"[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}",
-            RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
+            RegexOptions.Compiled, TimeSpan.FromMilliseconds(500));
 
     private static readonly Regex PhoneRegex =
         new(@"(\+?36|06)[\s-]?\d{1,2}[\s-]?\d{3}[\s-]?\d{4}",
-            RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
+            RegexOptions.Compiled, TimeSpan.FromMilliseconds(500));
 
     /// <summary>Unique identifier of this flag.</summary>
     public Guid Id { get; private set; }
