@@ -26,3 +26,9 @@ public sealed record ListCommunityEntriesQuery(
 /// Used by moderation staff to process the review queue.
 /// </summary>
 public sealed record GetModerationQueueQuery(Guid TenantId) : IRequest<Result<IReadOnlyList<CatalogEntry>>>;
+
+/// <summary>
+/// Returns a <see cref="CatalogEntry"/> together with its current rating rollup.
+/// </summary>
+public sealed record GetCatalogEntryWithRatingsQuery(Guid EntryId)
+    : IRequest<Result<CatalogEntryWithRatingsDto>>;

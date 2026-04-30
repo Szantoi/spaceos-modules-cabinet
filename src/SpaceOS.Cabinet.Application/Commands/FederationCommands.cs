@@ -2,7 +2,25 @@ namespace SpaceOS.Cabinet.Application.Commands;
 
 using Ardalis.Result;
 using MediatR;
+using SpaceOS.Cabinet.Abstractions;
 using SpaceOS.Cabinet.Catalog;
+
+/// <summary>
+/// UPSERT: submits a community catalog entry for the given tenant.
+/// If a <see cref="CatalogEntry"/> with the same <c>TenantId</c> and <c>SimilarityFingerprint</c>
+/// already exists (in any state), its payload is updated and it is re-submitted.
+/// Otherwise a new Draft entry is created and immediately submitted.
+/// SEC-02: the fingerprint is computed server-side from the payload; it must never be supplied by the caller.
+/// </summary>
+public sealed record SubmitCommunityCatalogEntryCommand(
+    Guid TenantId,
+    Guid ActorUserId,
+    CatalogType Type,
+    string Name,
+    string Description,
+    CatalogVisibility Visibility,
+    string PayloadJson,
+    string PayloadSchemaVersion) : IRequest<Result<Guid>>;
 
 /// <summary>Rates a <see cref="CatalogEntry"/> owned by another tenant.</summary>
 public sealed record RateCatalogEntryCommand(

@@ -21,4 +21,14 @@ public interface ICatalogEntryRepository
 
     /// <summary>Persists mutations to an existing <see cref="CatalogEntry"/>.</summary>
     Task UpdateAsync(CatalogEntry entry, CancellationToken ct = default);
+
+    /// <summary>
+    /// Finds the first catalog entry for the given tenant whose <c>SimilarityFingerprint</c>
+    /// matches <paramref name="fingerprint"/>, or <c>null</c> if none exists.
+    /// Used by the community UPSERT path (SEC-02).
+    /// </summary>
+    /// <param name="tenantId">The owning tenant.</param>
+    /// <param name="fingerprint">The server-computed fingerprint to match.</param>
+    /// <param name="ct">Cancellation token.</param>
+    Task<CatalogEntry?> GetByFingerprintAsync(Guid tenantId, string fingerprint, CancellationToken ct = default);
 }

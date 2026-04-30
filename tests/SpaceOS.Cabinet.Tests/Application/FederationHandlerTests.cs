@@ -65,6 +65,10 @@ public class FederationHandlerTests
 
         public Task UpdateAsync(CatalogEntry entry, CancellationToken ct = default)
             => Task.CompletedTask;
+
+        public Task<CatalogEntry?> GetByFingerprintAsync(Guid tenantId, string fingerprint, CancellationToken ct = default)
+            => Task.FromResult(_store.FirstOrDefault(e =>
+                e.TenantId == tenantId && e.SimilarityFingerprint == fingerprint));
     }
 
     // ── RateCatalogEntryCommandHandler ────────────────────────────────────────

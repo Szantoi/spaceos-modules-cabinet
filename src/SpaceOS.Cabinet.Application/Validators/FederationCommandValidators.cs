@@ -1,7 +1,31 @@
 namespace SpaceOS.Cabinet.Application.Validators;
 
+using System.Text;
 using FluentValidation;
 using SpaceOS.Cabinet.Application.Commands;
+using SpaceOS.Cabinet.Catalog;
+
+/// <summary>Validates <see cref="SubmitCommunityCatalogEntryCommand"/>.</summary>
+public sealed class SubmitCommunityCatalogEntryCommandValidator
+    : AbstractValidator<SubmitCommunityCatalogEntryCommand>
+{
+    /// <summary>Initializes validation rules.</summary>
+    public SubmitCommunityCatalogEntryCommandValidator()
+    {
+        RuleFor(x => x.TenantId).NotEmpty();
+        RuleFor(x => x.ActorUserId).NotEmpty();
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(CatalogEntry.MaxNameLength);
+        RuleFor(x => x.Description).MaximumLength(CatalogEntry.MaxDescriptionLength);
+        RuleFor(x => x.PayloadJson)
+            .NotEmpty()
+            .Must(json => Encoding.UTF8.GetByteCount(json) <= CatalogEntry.MaxPayloadSizeBytes)
+            .WithMessage($"PayloadJson must not exceed {CatalogEntry.MaxPayloadSizeBytes} bytes.");
+        RuleFor(x => x.PayloadSchemaVersion).NotEmpty().MaximumLength(100);
+        RuleFor(x => x.Visibility)
+            .Must(v => v != CatalogVisibility.Curated)
+            .WithMessage("Community entries cannot have Curated visibility.");
+    }
+}
 
 /// <summary>Validates <see cref="CreateTenantStandardCommand"/>.</summary>
 public sealed class CreateTenantStandardCommandValidator : AbstractValidator<CreateTenantStandardCommand>

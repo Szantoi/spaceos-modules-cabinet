@@ -357,6 +357,64 @@ public sealed class CatalogEntry
     }
 
     /// <summary>
+    /// Community UPSERT path: updates the entry's mutable fields and transitions it to
+    /// <see cref="CatalogLifecycleState.Submitted"/> regardless of its current state.
+    /// Allowed from any non-terminal state (Draft, Submitted, Approved, Published, Deprecated).
+    /// Re-hashes the payload; re-runs validation; increments version.
+    /// </summary>
+    /// <param name="name">New display name (1–100 chars).</param>
+    /// <param name="description">New description (0–500 chars).</param>
+    /// <param name="visibility">New visibility scope.</param>
+    /// <param name="payloadJson">Updated JSON payload (must pass <paramref name="validator"/>).</param>
+    /// <param name="payloadSchemaVersion">Schema version identifier.</param>
+    /// <param name="actorUserId">User performing the UPSERT.</param>
+    /// <param name="validator">Payload validator (re-run to guard against schema drift).</param>
+    public Result UpdateAndResubmit(
+        string name,
+        string? description,
+        CatalogVisibility visibility,
+        string payloadJson,
+        string payloadSchemaVersion,
+        Guid actorUserId,
+        ICatalogPayloadValidator validator)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return Result.Invalid(new ValidationError("Name is required."));
+
+        if (name.Length > MaxNameLength)
+            return Result.Invalid(new ValidationError($"Name must be <= {MaxNameLength} characters."));
+
+        var desc = description ?? string.Empty;
+        if (desc.Length > MaxDescriptionLength)
+            return Result.Invalid(new ValidationError($"Description must be <= {MaxDescriptionLength} characters."));
+
+        if (!PayloadSchemaVersionRegex.IsMatch(payloadSchemaVersion))
+            return Result.Invalid(new ValidationError($"Invalid PayloadSchemaVersion format: '{payloadSchemaVersion}'."));
+
+        if (Encoding.UTF8.GetByteCount(payloadJson) > MaxPayloadSizeBytes)
+            return Result.Invalid(new ValidationError($"PayloadJson exceeds {MaxPayloadSizeBytes} byte limit."));
+
+        var validationResult = validator.Validate(Type, payloadSchemaVersion, payloadJson);
+        if (!validationResult.IsSuccess)
+            return Result.Error(string.Join("; ", validationResult.Errors));
+
+        var now = DateTimeOffset.UtcNow;
+        Name = name;
+        Description = desc;
+        Visibility = visibility;
+        PayloadJson = payloadJson;
+        PayloadSchemaVersion = payloadSchemaVersion;
+        ContentHash = ComputeHash(payloadJson);
+        State = CatalogLifecycleState.Submitted;
+        UpdatedBy = actorUserId;
+        UpdatedAt = now;
+        Version++;
+
+        _domainEvents.Add(new CatalogEntrySubmitted(Id, ContentHash, actorUserId, now));
+        return Result.Success();
+    }
+
+    /// <summary>
     /// Returns all uncommitted domain events and clears the internal list.
     /// Call this after persisting the aggregate.
     /// </summary>
