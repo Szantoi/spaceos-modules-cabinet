@@ -14,13 +14,15 @@
     "SpaceOS.Cabinet.Application@0.3.0",
     "SpaceOS.Cabinet@0.3.0"
   ],
-  "testCount": 719,
+  "testCount": 755,
   "targetFrameworks": ["net8.0", "net10.0"],
   "highlights": [
     "TenantStandard aggregate with 7 domain events",
     "CatalogEntry Federation: fingerprint, cluster, rating, flag",
     "SnapshotMigrator 0.2→0.3 (AppliedTenantStandard=null default)",
     "ConstructionRuleEngine.ApplyAllAsync Channel<T> parallel (BE-01)",
-    "AddCabinetFederation() DI extension"
+    "AddCabinetFederation() DI extension",
+    "BenchmarkDotNet 0.14 project: ConstructionRuleEngineBenchmark (not in sln)",
+    "SHA-256 determinism tests: 5 tests x 10 runs each"
   ]
 }
