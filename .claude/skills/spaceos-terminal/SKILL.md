@@ -63,7 +63,7 @@ NNN = az inbox üzenet sorszáma (pl. MSG-KERNEL-067 → 067).
 ---
 id: MSG-<TERMINAL>-<NNN>-DONE
 from: <terminál>
-to: root
+to: conductor
 type: done
 priority: <az inbox üzenet prioritása>
 status: UNREAD
@@ -109,7 +109,7 @@ Ha a feladatot nem tudod befejezni önállóan (hiányzó info, függőség, inf
 ---
 id: MSG-<TERMINAL>-<NNN>-BLOCKED
 from: <terminál>
-to: root
+to: conductor
 type: blocked
 priority: high
 status: UNREAD

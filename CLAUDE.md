@@ -6,6 +6,41 @@
 
 ---
 
+## SESSION STARTUP/SHUTDOWN RITUAL
+
+**Minden session elején:**
+```bash
+# 0. Datahaven státusz regisztráció — jelezd hogy dolgozol
+curl -X POST https://datahaven.joinerytech.hu/api/terminal/status \
+  -H "Authorization: Bearer dev-token-spaceos-dashboard-2026" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "terminal": "cabinet",
+    "status": "working",
+    "currentTask": "Session started - checking inbox"
+  }'
+
+# 1. Inbox ellenőrzés
+ls /opt/spaceos/docs/mailbox/cabinet/inbox/
+grep -l "status: UNREAD" /opt/spaceos/docs/mailbox/cabinet/inbox/*.md 2>/dev/null
+```
+
+**Session végén (DONE/BLOCKED outbox után):**
+```bash
+# Datahaven státusz regisztráció — jelezd hogy befejeztél
+curl -X POST https://datahaven.joinerytech.hu/api/terminal/status \
+  -H "Authorization: Bearer dev-token-spaceos-dashboard-2026" \
+  -H "Content-Type: application/json" \
+  -d '{\"terminal\":\"cabinet\",\"status\":\"idle\"}'
+```
+
+**Datahaven Dashboard:** https://datahaven.joinerytech.hu (token: `dev-token-spaceos-dashboard-2026`)
+- Dashboard (`/`) — Cabinet státusz (WORKING/IDLE), inbox/outbox metrikák
+- Kanban (`/kanban`) — Cabinet swimlane a Delivery track-en
+- Teljes API: `docs/WORKFLOW.md` — "Datahaven Dashboard" szakasz
+
+---
+
 ## PROJEKT KONTEXTUS
 
 **Repo:** `spaceos-modules-cabinet`
